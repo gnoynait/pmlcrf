@@ -1,15 +1,13 @@
 // feature table
 typedef struct _feature {
-    int attr;
-    int st;
-    int pst;
+    int st; // y_t, 0 to L-1
+    int pst; // y_{t-1}, 0 to L, L means all labels
+    int attr; // x_t, 0 to M, M means all attrs
 } feature_t;
 
 typedef struct _feature_table_item {
-    int st;
-    int pst;
-    int attr;
-    int count;
+    feature_t feat;
+    int count; // how many times occur in corpus
     struct _feature_table_item * next;
 } feature_table_item_t;
 

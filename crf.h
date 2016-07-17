@@ -1,8 +1,9 @@
 typedef struct _crfmodel_t {
     int nlabel; // number of label
     int nfeat; // number of feature
-    feature_t * feats; // valid feature table
+    feature_t *feats; // valid feature table
     float *w; // feature weight
+    feature_t *feat_range; // nattr*2, [a, 0] feature start, [a,  1] feture end 
 } crfmodel_t;
 
 crfmodel_t *new_crfmodel(int num_label, int num_feature);
@@ -24,18 +25,24 @@ typedef struct _crfinst_t {
 crfindst_t *new_crfinst(int T, feat_t *feature, int *label);
 
 typedef struct _infenv_t {
-    float *alpha;
-    float *beta;
+    int cap;
+    int L;
+    float *alpha; // T * L
+    float *beta; // T * L
     float *marginal;
-    float *max;
-    float *trans;
+    int *maxseq;
+    float *trans; // transition, T * L * L
+    float *pot; // potential function, T * L * L
     crfmodel_t *model;
+    inst_t *inst; // current instance
 } infenv_t;
 
+extern void infenv_set_model(crfmodel_t *model);
+extern void infenv_set_inst(inst_t *inst);
 
 enum {
-    L1 = 0,
-    L2 = 1,
+    L1 = 0x00000001,
+    L2 = 0x00000010,
 };
 
 typedef struct _obj_t {
